@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,10 +10,10 @@ public class PlayerController : MonoBehaviour
     private PlayerStatus status;
     private PlayerMovement movement;
 
-    [SerializeField] private GameObject aimCamera;
+    [SerializeField] private CinemachineVirtualCamera aimCamera;
     private GameObject mainCamera;
 
-    [SerializeField] private KeyCode _aimKey = KeyCode.Mouse1;
+    [SerializeField] private KeyCode aimKey = KeyCode.Mouse1;
 
     private void Awake() => Init();
     private void OnEnable() => SubscribeEvents();
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     {
         status = GetComponent<PlayerStatus>();
         movement = GetComponent<PlayerMovement>();
-        mainCamera = Camera.main.gameObject;
+        //mainCamera = Camera.main.gameObject;
     }
 
     private void HandlePlayerControl()
@@ -53,28 +54,23 @@ public class PlayerController : MonoBehaviour
         if (status.IsAiming.Val) avatarDir = camRotateDir;
         //움직이는 방향으로 변환
         else avatarDir = moveDir;
+
         movement.SetAvatarRotation(avatarDir);
     }
 
     private void HandleAiming()
     {
-        status.IsAiming.Val = Input.GetKey(_aimKey);
+        status.IsAiming.Val = Input.GetKey(aimKey);
     }
 
     public void SubscribeEvents()
     {
-        status.IsAiming.Subscribe(value => SetActivateAimCamera(value));
+        status.IsAiming.Subscribe(aimCamera.gameObject.SetActive);
     }
 
     public void UnsubscribeEvents()
     {
-        status.IsAiming.UnSubscribe(value => SetActivateAimCamera(value));
-    }
-
-    private void SetActivateAimCamera(bool value)
-    {
-        aimCamera.SetActive(value);
-        mainCamera.SetActive(!value);
+        status.IsAiming.UnSubscribe(aimCamera.gameObject.SetActive);
     }
 }
 

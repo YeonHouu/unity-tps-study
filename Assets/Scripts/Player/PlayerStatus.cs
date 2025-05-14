@@ -18,6 +18,4 @@ public class PlayerStatus : MonoBehaviour
     public ObservableProperty<bool> IsAiming { get; private set; } = new();
     public ObservableProperty<bool> IsMoving { get; private set; } = new();
     public ObservableProperty<bool> IsAttacking { get; private set; } = new();
-
-
 }
