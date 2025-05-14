@@ -13,7 +13,7 @@ namespace DesignPattern
             set
             {
                 //새로 입력받은 값이 이전 값과 같다면 리턴
-                if (val.Equals(val)) return;
+                if (val.Equals(value)) return;
                 val = value;
                 //val이 변경될 때 알림 전송
                 Notify();
