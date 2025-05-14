@@ -44,6 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector3 SetAimRotation()
     {
+        // x는 가로의 움직임 y는 세로의 움직임
         Vector2 mouseDir = GetMouseDirection();
 
         // x축 제한 필요x
@@ -57,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         
         // 에임의 경우 상하 회전 반영
         Vector3 currentEuler = aim.localEulerAngles;        //현재 에임의 각도
+        // 마우스의 y축 움직임은 유니티 상에서 x 축 rotation
         aim.localEulerAngles = new Vector3(currentRotation.y, currentEuler.y, currentEuler.z);
 
         //회전 방향 벡터 반환
