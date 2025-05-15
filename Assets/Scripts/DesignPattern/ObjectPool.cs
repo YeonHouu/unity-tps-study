@@ -1,22 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 
 namespace DesignPattern
 {
-    // MonoBehaviour를 상속받아야 한다
-    public class ObjectPool<T> where T : MonoBehaviour
+    public class ObjectPool
     {
-        private Stack<T> stack;
-        private T targetPrefab;
+        private Stack<PooledObject> stack;
+        private PooledObject targetPrefab;
         private GameObject poolObject;
 
-        public ObjectPool(T targetPrefab, int initSize = 5) => Init(targetPrefab, initSize);
+        public ObjectPool(PooledObject targetPrefab, int initSize = 5) => Init(targetPrefab, initSize);
        
-        private void Init(T targetPrefab, int initSize)
+        private void Init(PooledObject targetPrefab, int initSize)
         {
-            stack = new Stack<T>(initSize);
+            stack = new Stack<PooledObject>(initSize);
             this.targetPrefab = targetPrefab;
             poolObject = new GameObject($"{targetPrefab.name} Pool");
 
@@ -27,7 +27,7 @@ namespace DesignPattern
             }
         }
 
-        public T Get()
+        public PooledObject PopPool()
         {
             // 풀에 오브젝트가 없다면
             if(stack.Count == 0)
@@ -36,12 +36,12 @@ namespace DesignPattern
                 CreatePoolObject();
             }
 
-            T pooledObject = stack.Pop();
+            PooledObject pooledObject = stack.Pop();
             pooledObject.gameObject.SetActive(true);
             return pooledObject;
         }
 
-        public void ReturnPool(T target)
+        public void ReturnPool(PooledObject target)
         {
             // 풀에 들어가는 순간 오브젝트의 하위 오브젝트로 생성 (시각적으로 나타내기 위함)
             target.transform.parent = poolObject.transform;
@@ -52,7 +52,8 @@ namespace DesignPattern
 
         private void CreatePoolObject()
         {
-            T obj = MonoBehaviour.Instantiate(targetPrefab);
+            PooledObject obj = MonoBehaviour.Instantiate(targetPrefab);
+            obj.PooledInit(this);
             ReturnPool(obj);
         }
     }
