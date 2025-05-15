@@ -13,6 +13,7 @@ namespace DesignPattern
 
         public void PooledInit(ObjectPool objPool)
         {
+            // 참조를 연결
             ObjPool = objPool;
         }    
 
