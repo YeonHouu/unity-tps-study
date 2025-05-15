@@ -40,5 +40,4 @@ public class SFXController : PooledObject
         // 오디오 파일 길이
         currentCount = clip.length;
     }
-
 }

@@ -72,7 +72,6 @@ public class Gun : MonoBehaviour
             //몬스터를 어떻게 구현하는가에 따라 다름
             // IDamagable
         }
-
         return null;
     }
 
