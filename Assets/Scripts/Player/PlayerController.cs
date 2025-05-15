@@ -12,8 +12,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
 
     [SerializeField] private CinemachineVirtualCamera aimCamera;
+    [SerializeField] private Gun gun;
 
     [SerializeField] private KeyCode aimKey = KeyCode.Mouse1;
+    [SerializeField] private KeyCode shootKey = KeyCode.Mouse0;
 
     private void Awake() => Init();
     private void OnEnable() => SubscribeEvents();
@@ -35,6 +37,19 @@ public class PlayerController : MonoBehaviour
 
         HandleMovement();
         HandleAiming();
+        HandleShooting();
+    }
+
+    private void HandleShooting()
+    {
+        if( status.IsAiming.Val && Input.GetKey(shootKey))
+        {
+            status.IsAttacking.Val = gun.Shoot();
+        }
+        else
+        {
+            status.IsAttacking.Val = false;
+        }
     }
 
     private void HandleMovement()
@@ -79,6 +94,7 @@ public class PlayerController : MonoBehaviour
 
         status.IsAiming.Subscribe(aimCamera.gameObject.SetActive);
         status.IsAiming.Subscribe(SetAimAnimation);
+        status.IsAttacking.Subscribe(SetAttackAnimation);
     }
 
     public void UnsubscribeEvents()
@@ -87,9 +103,11 @@ public class PlayerController : MonoBehaviour
 
         status.IsAiming.UnSubscribe(aimCamera.gameObject.SetActive);
         status.IsAiming.UnSubscribe(SetAimAnimation);
+        status.IsAttacking.UnSubscribe(SetAttackAnimation);
     }
 
     private void SetAimAnimation(bool value) => animator.SetBool("IsAim", value);
     private void SetMoveAnimation(bool value) => animator.SetBool("IsMove", value);
+    private void SetAttackAnimation(bool value) => animator.SetBool("IsAttack", value);
 }
 
