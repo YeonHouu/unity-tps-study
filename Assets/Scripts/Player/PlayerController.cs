@@ -9,9 +9,10 @@ public class PlayerController : MonoBehaviour
 
     private PlayerStatus status;
     private PlayerMovement movement;
+    private Animator animator;
 
     [SerializeField] private CinemachineVirtualCamera aimCamera;
-    private GameObject mainCamera;
+    //private GameObject mainCamera;
 
     [SerializeField] private KeyCode aimKey = KeyCode.Mouse1;
 
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
         status = GetComponent<PlayerStatus>();
         movement = GetComponent<PlayerMovement>();
         //mainCamera = Camera.main.gameObject;
+        animator = GetComponent<Animator>();
     }
 
     private void HandlePlayerControl()
@@ -66,11 +68,16 @@ public class PlayerController : MonoBehaviour
     public void SubscribeEvents()
     {
         status.IsAiming.Subscribe(aimCamera.gameObject.SetActive);
+        status.IsAiming.Subscribe(SetAimAnimation);
     }
 
     public void UnsubscribeEvents()
     {
         status.IsAiming.UnSubscribe(aimCamera.gameObject.SetActive);
+        status.IsAiming.UnSubscribe(SetAimAnimation);
+
     }
+
+    private void SetAimAnimation(bool value) => animator.SetBool("IsAim", value);
 }
 
